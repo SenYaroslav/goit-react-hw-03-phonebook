@@ -9,6 +9,21 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const localContacts = localStorage.getItem('contacts')
+    const parsedLocalContacts = JSON.parse(localContacts)
+
+    this.setState({ contacts: parsedLocalContacts})
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { contacts } = this.state;
+
+    if (contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+  }
+
   formSubmitHandler = data => {
     const nameList = this.state.contacts.map(contact => contact.name);
 
@@ -46,13 +61,11 @@ class App extends Component {
 
     return (
       <div
-        style={
-          {
-            padding: '30px',
-            boxSizing: 'border-box',
-            fontSize: '18px',
-          }
-        }
+        style={{
+          padding: '30px',
+          boxSizing: 'border-box',
+          fontSize: '18px',
+        }}
       >
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.formSubmitHandler} />
